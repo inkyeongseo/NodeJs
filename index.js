@@ -14,11 +14,11 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 //appplication/json  json 형태로 파싱
 
-app.use(cookieParser())
+app.use(cookieparser())
 
 const mongoose = require('mongoose');
 const { json } = require('body-parser');
-const cookieParser = require('cookie-parser');
+
 mongoose.connect(config.mongoURI,{
   useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify:false
 }).then(() => console.log('MongoDB Connected...'))
@@ -45,7 +45,7 @@ app.post('/register',(req,res) =>{
 })
 
 
-app.post('/login',(req,res) =>{
+app.post('/api/users/login',(req,res) =>{
   //1.요청된 이메일을 데이터베이스에서 있는지 찾는다.
   User.findOne({email: req.body.email}, (err,user)=>{
     if(!user){

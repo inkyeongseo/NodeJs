@@ -68,9 +68,9 @@ userSchema.methods.comparePassword = function(plainPassword, cb){
     //plainPassword가 진짜 비밀번호,  암호화된 비밀번호와 같은지 확인
     //plainPassword을 암호화해서 db에 있는 것과 같은지 확인해야 함
     bcrypt.compare(plainPassword, this.password, function(err, isMatch){
-        if(err) return cb(err),
-            cb(null, isMatch)
-            //cb에 에러는 없고 Match가 됨을 뜻함 
+        if(err) return cb(err);
+        cb(null, isMatch)
+        //cb에 에러는 없고 Match가 됨을 뜻함 
     })
 }
 
@@ -79,7 +79,7 @@ userSchema.methods.generateToken =function(cb){
 
     var user = this;
     //jsonwebtoken을 이용해 token을 생성하기
-    var token = jwt.sign(user._id,'secretToken')
+    var token = jwt.sign(user._id.toHexString(),'secretToken')
 
     //token은 uer_id와 'secretToeken'을 합쳐서 만든다
     //그렇기 때문에 뒤에 문자 'secretToken'도 기억하고 있어야 한다.
