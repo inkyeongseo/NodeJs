@@ -5,6 +5,7 @@ const port = 5000
 
 const{User} = require("./models/User");
 const bodyParser = require('body-parser');
+const cookieparser = require('cookie-parser');
 
 const config = require('./config/key')
 
@@ -13,9 +14,11 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 //appplication/json  json 형태로 파싱
 
+app.use(cookieParser())
 
 const mongoose = require('mongoose');
 const { json } = require('body-parser');
+const cookieParser = require('cookie-parser');
 mongoose.connect(config.mongoURI,{
   useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify:false
 }).then(() => console.log('MongoDB Connected...'))
@@ -60,7 +63,17 @@ app.post('/login',(req,res) =>{
     //3.비밀번호가 같다면 token생성
     
     user.generateToken((err,user)=>{
-      
+      //staus(400)은 에러
+      if(err) return res.status(400).send(err);
+
+
+      //token을 저장한다
+      //저장은 쿠키, 로컬스토리지 등에 할 수 있다 , 지금은 쿠키에 저장
+
+        res.cookie("x_auth",user.token)
+        .status(200)
+        .json({loginSuccess: true,userId: user._id})
+
     })
     })
 
