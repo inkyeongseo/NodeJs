@@ -7,6 +7,7 @@ const{User} = require("./models/User");
 const bodyParser = require('body-parser');
 const cookieparser = require('cookie-parser');
 
+const{auth}= require('./middleware/auth');
 const config = require('./config/key')
 
 //application/x-www-form-urlencoded   
@@ -28,7 +29,7 @@ app.get('/', (req, res) => {
   res.send('Hello World! 변경 테스트')
 })
 
-app.post('/register',(req,res) =>{
+app.post('/api/users/register',(req,res) =>{
   
   //회원가입 할 때 필요한 정보들을 client에서 가져오면
   //그것들을 데이터 베이스에 넣는다.
@@ -78,6 +79,38 @@ app.post('/api/users/login',(req,res) =>{
     })
 
   })
+
+})
+
+
+app.get('/api/users/auth',auth,(req,res)=>{
+//auth은 endpoint와 cb사이 중간에 실행(middleware)
+
+//미들웨어를 통과해 여기 부분을 실행하고 있다는 것은 Authentication이 True라는 뜻
+    res.status(200).json({
+      _id : req.user._id,
+      isAdmin : req.user.role === 0 ? false : true,
+      isAuth: ture,
+      email : req.user.email,
+      name : req.user.name,
+      lastname : req.user.lastname,
+      role : req.user.role,
+      image : req.user.image
+    })
+
+})
+
+
+//로그아웃
+app.get('/api/users/logout',auth,(req,res)=>{
+
+  User.findOneAndUpdate({_id: req.user._id},
+    {token : ""},(err,user)=>{
+      if(err) return res.json({success:false, err});
+      return res.status(200).send({
+        success: true
+      })
+    })
 
 })
 
