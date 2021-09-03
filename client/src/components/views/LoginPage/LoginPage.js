@@ -1,9 +1,9 @@
-import { response } from 'express'
 import React, {useState} from 'react'
 import {useDispatch} from 'react-redux'
-import{loginUser} from '../../../_actions/user_action';
+import {loginUser} from '../../../_actions/user_action';
+import { withRouter } from 'react-router-dom'; 
 
-function LoginPage() {
+function LoginPage(props) {
 
     const dispatch = useDispatch();
 
@@ -19,14 +19,27 @@ function LoginPage() {
     }
 
     const onSubmitHandler = (event)=>{
+        //페이지가 리프레시되는 걸 방지
         event.preventDefault();
         
         let body = {
             email : Email,
-            passowrd : Password
+            password : Password
         }
 
+        //loginUser는 aciton
         dispatch(loginUser(body))
+        .then(response=>{
+            if(response.payload.loginSuccess){
+                props.history.push('/') //로그인 성공 시 랜딩페이지인 root page 로 이동
+            } else{
+                alert('Error')
+            }                
+        }) 
+
+            
+            
+        
 
     }
     
@@ -55,4 +68,16 @@ function LoginPage() {
     )
 }
 
-export default LoginPage
+export default withRouter(LoginPage)
+
+
+
+
+
+
+
+
+
+
+
+
