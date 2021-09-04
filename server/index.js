@@ -88,17 +88,19 @@ app.get('/api/users/auth',auth,(req,res)=>{
 
 //미들웨어를 통과해 여기 부분을 실행하고 있다는 것은 Authentication이 True라는 뜻
     res.status(200).json({
-      _id : req.user._id,
-      isAdmin : req.user.role === 0 ? false : true,
-      isAuth: ture,
-      email : req.user.email,
-      name : req.user.name,
-      lastname : req.user.lastname,
-      role : req.user.role,
-      image : req.user.image
+      _id: req.user._id,
+        isAdmin: req.user.role === 0 ? false: true, // role 0: 일반 유저 로 해놓음
+        isAuth: true,
+        email: req.user.email,
+        name: req.user.name,
+        lastname: req.user.lastname,
+        role: req.user.role,
+        image: req.user.image
     })
 
 })
+
+
 
 
 //로그아웃
